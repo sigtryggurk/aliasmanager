@@ -1,0 +1,111 @@
+#!/bin/bash
+
+ALIASES_PATH=$HOME/.aliases
+
+function bond
+{
+  source $ALIASES_PATH
+  case $1 in
+    add|a)
+      __bond-add ${@:2}
+      ;;
+    rm)
+      __bond-rm ${@:2}
+      ;;
+    ls)
+      __bond-ls ${@:2}
+      ;;
+    help|-h|--help)
+      __bond-help
+      ;;
+    *)
+      echo "Valid Options are add, rm, ls, help
+Run 'bond help' for more information"
+      ;;
+  esac
+
+} 2> /dev/null
+
+function __bond-add
+{
+  if [ -z "$1" ]; then
+    echo "Alias Name:"
+    read NAME
+  else
+    NAME=$1
+  fi
+
+  if [ -z $NAME]; then
+    return 0
+  fi 
+  
+  SEARCH=$(grep "alias $NAME=" $ALIASES_PATH -c)
+  if [ $SEARCH != 0 ]; then
+    echo "alias '$NAME' already exists. Please remove it first!" #TODO ask if usr wnats to overwrite
+    return 0
+  fi
+
+  if [ -z "$2" ]; then
+    echo "Alias Definition:"
+    read DEFINITION
+  else
+    DEFINITION=${@:2}
+  fi
+
+  alias $NAME="$DEFINITION"
+  echo "alias $NAME='$DEFINITION'" >> $ALIASES_PATH
+}
+
+function __bond-help
+{
+  echo "Bond - Alias Manager
+
+Usage:
+  bond add [<alias> [<definition>]]
+  bond ls [<alias>...]
+  bond rm [<alias>...]
+  bond help | -h | --help
+
+Options:
+  -h --help     Show this screen."
+}
+
+
+function __bond-ls
+{
+  if [ -z "$1" ]; then
+    sort $ALIASES_PATH 
+  else
+    for a in $@; do
+      ALIAS=$(alias $a) 
+      if [ -z "$ALIAS" ]; then
+        echo "No alias with name '$a'"
+      else
+        echo $ALIAS
+      fi
+    done
+  fi
+}
+
+function __bond-rm
+{
+  if [ -z "$1" ]; then
+    echo "Please provide the alias(es) to remove!"
+    READ ALIASES
+    if [ -z "$ALIASES"]; then
+      return 0
+    fi
+  else
+    ALIASES=$@
+  fi    
+  for a in $ALIASES; do
+    ALIAS=$(alias $a)
+    if [ -z "$ALIAS" ]; then
+      echo "No alias with name '$a'"
+    else
+      unalias $a
+      sed "/alias $a=/d" $ALIASES_PATH > TEMP_ALIASES ; mv TEMP_ALIASES $ALIASES_PATH #3x fast than sed -i
+    fi
+  done
+}
+

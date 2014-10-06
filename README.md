@@ -1,4 +1,6 @@
-aliasmanager
+Bond - Alias Manager
 ============
 
-Functions to manager your personal aliases
+Command line tool for managing your aliases. 
+
+Allows you to easily add, remove, search and list your personal aliases.
