@@ -41,8 +41,15 @@ function __bond-add
   
   SEARCH=$(grep "alias $NAME=" $ALIASES_PATH -c)
   if [ $SEARCH != 0 ]; then
-    echo "alias '$NAME' already exists. Please remove it first!" #TODO ask if usr wnats to overwrite
-    return 0
+    echo "'$NAME' is already defined as:"
+    __bond-ls $NAME
+    echo "Do you wish to replace it [y/n]?"
+    read REPLACE
+    if [ $REPLACE = "y" ]; then
+      __bond-rm $NAME
+    else
+      return 0
+    fi
   fi
 
   if [ -z "$2" ]; then
