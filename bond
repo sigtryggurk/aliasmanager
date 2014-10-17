@@ -35,7 +35,7 @@ function __bond-add
     NAME=$1
   fi
 
-  if [ -z $NAME]; then
+  if [ -z "$NAME"]; then
     return 0
   fi 
   
@@ -91,13 +91,15 @@ function __bond-rm
 {
   if [ -z "$1" ]; then
     echo "Please provide the alias(es) to remove!"
-    READ ALIASES
-    if [ -z "$ALIASES"]; then
-      return 0
-    fi
+    read ALIASES
   else
     ALIASES=$@
   fi    
+
+  if [ -z "$ALIASES"]; then
+    return 0
+  fi
+ 
   for a in $ALIASES; do
     ALIAS=$(alias $a)
     if [ -z "$ALIAS" ]; then
