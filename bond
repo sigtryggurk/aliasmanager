@@ -15,6 +15,9 @@ function bond
     ls)
       __bond-ls ${@:2}
       ;;
+    grep)
+      __bond-grep ${@:2}
+      ;;
     help|-h|--help)
       __bond-help
       ;;
@@ -91,6 +94,15 @@ function __bond-ls
         echo $ALIAS
       fi
     done
+  fi
+}
+
+function __bond-grep
+{
+  if [ -z "$1" ]; then
+     echo "Please specify grep format!"
+  else
+    grep --no-filename "$@" $ALIASES_PATH
   fi
 }
 
