@@ -24,7 +24,7 @@ function bond
       __bond-help
       ;;
     *)
-      echo "Valid Options are add, rm, ls, help
+      echo "Valid Options are add, rm, ls, grep, help
 Run 'bond help' for more information"
       ;;
   esac
@@ -74,6 +74,7 @@ function __bond-help
 
 Usage:
   bond add [<alias> [<definition>]]
+  bond grep <pattern>
   bond ls [<alias>...]
   bond rm [<alias>...]
   bond help | -h | --help
