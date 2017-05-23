@@ -2,7 +2,7 @@
 
 ALIASES_PATH=$HOME/.aliases
 
-source ALIASES_PATH
+source $ALIASES_PATH
 
 function bond
 {
